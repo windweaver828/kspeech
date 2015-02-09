@@ -2,5 +2,5 @@
 
 import re
 
-def isCommand(command, reg):
-    pass
+def isCommand(command, args):
+    return True
