@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 
-import re
+def callfunc(func, args=list()):
+    if len(args):
+        return func(args*)
+    else: return func()
 
-def isCommand(command, args):
-    return True
+
+def helloworld():
+    print("Hello, World!")
+
+
+commands = {
+    [["hello"], ["world"]]:(helloworld, None),
+}
