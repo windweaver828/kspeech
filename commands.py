@@ -18,5 +18,14 @@ def isCommand(command, args):
             return True
 
 
+def callfunc(func, args=list()):
+    return func(args*)
+
+
 def helloworld():
     print("Hello, World!")
+
+
+commands = {
+	[["hello"], ["world"]]:callfunc(helloworld),
+	}
