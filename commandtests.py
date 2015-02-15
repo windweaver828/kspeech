@@ -1,18 +1,10 @@
 import itertools
 import random
-from commands import isCommand
+from commands import isCommand, commands
 
 wordslist = [
-    "please", "if", "to", "the", "would", "you", "or", "blah",
-    "test", "when", "hello", "world", "this", "they", "them",
+    "if", "to", "the", "would", "you", "or", "this", "they", "them",
 ]
-
-command = [
-    ['power', 'shut', 'turn'],
-    ["off", "down"],
-    ["computer"]
-]
-
 
 def gentests(command):
     return itertools.product(*command)
@@ -28,13 +20,14 @@ def addwords(addto, wordslist, count):
 
 passed = list()
 fails = list()
-for test in gentests(command):
-    test = addwords(test, wordslist, random.randrange(3, 10))
-    test = " ".join(test)
-    if isCommand(test, command):
-        passed.append(test)
-    else:
-        fails.append(res)
+for command in commands.keys():
+	for test in gentests(command):
+	    # test = addwords(test, wordslist, random.randrange(3, 10))
+	    test = " ".join(test)
+	    if isCommand(test, command):
+	        passed.append(test)
+	    else:
+	        fails.append(test)
 
 print("Ran {testnum} tests.".format(testnum=(len(passed)+len(fails))))
 print("Passed {passed} tests.".format(passed=len(passed)))
