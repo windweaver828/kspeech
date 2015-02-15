@@ -3,9 +3,6 @@ import random
 from commands import commands
 from commandtools import isCommand
 
-# This is meant to test that the isCommand function works properly
-# on all commands defined in commands.py
-
 
 wordslist = [
     "if", "to", "the", "would", "you", "or", "this", "they", "them",
@@ -23,6 +20,22 @@ def addwords(addto, wordslist, count):
     return addto
 
 
+
+
+
+# List all commands and functions linked to
+for command, func in commands.items():
+	line = "{command} >> ".format(command=command)
+	func, args = func
+	line += "{func}(".format(func=repr(func).split()[1])
+	if args:
+		line += ", ".join(repr(arg) for arg in args)
+	line+=')'
+	print(line)
+print
+
+
+# Test isCommand on all variations of defined commands in commands.py
 passed = list()
 fails = list()
 for command in commands.keys():
