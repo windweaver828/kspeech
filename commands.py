@@ -4,40 +4,6 @@
 
 from CommandsDict import CommandsDict
 
-def isCommand(command, args):
-    index = 0
-    for arg in args:
-        if isinstance(arg, list):
-            for ar in arg:
-                if isinstance(ar, list):
-                    for a in ar:
-                        if isinstance(a, list):
-                            index-=1
-                            isCommand(command, a)
-                        elif not a in command:
-                            break
-                        else:
-                            index+=1
-                elif ar in command:
-                    index+=1
-                    break
-    if index >= len(args):
-        return True
-
-def callCommand(func, args):
-	if args: return func(*args)
-	else: return func()
-
-def matchCommand(command, commands):
-	for commdef in commands.keys():
-		if isCommand(command, commdef):
-			return commands[commdef]
-	else: return False
-
-def matchAndCallCommand(command, commands):
-	ret = matchCommand(command, commands)
-	if ret: callCommand(*ret)
-
 # ------------------------------------------------------- #
 # Add functions to call here                              #
 
@@ -47,6 +13,8 @@ def helloworld():
 
 def helloname(name):
 	print("Hello, {name}!".format(name=name))
+
+
 
 
 commands = CommandsDict()
@@ -65,6 +33,12 @@ func = helloname
 args = ['James']
 commfunc = [func, args]
 commands[commdef] = commfunc
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -106,7 +80,12 @@ if __name__ == '__main__':
 	commfunc = [func, args]
 	commands[commdef] = commfunc
 
+
+
+
 	# And to pull it all back out and call it
+	from commandtools import matchCommand, callCommand
+
 	command = "hello one"
 	func, args = matchCommand(command, commands)
 	callCommand(func, args)
@@ -114,10 +93,15 @@ if __name__ == '__main__':
 	command = "hello two"
 	callCommand(*matchCommand(command, commands))
 
+
+	# Or
+
 	# If all we want is to call it if it exists (like usual)
 	# and ignore if its not a match we use
+
+	from commandtools import matchAndCallCommand
 	command = "This doesn't exist hahahah"
-	matchAndCallCommand(command, commands)
+	matchAndCallCommand(command, commands) # Doesn't do anything
 
 	command = "hello three"
-	matchAndCallCommand(command, commands)
+	matchAndCallCommand(command, commands) # Does something
