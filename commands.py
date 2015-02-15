@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Examples to help under the if name == main clause down below
+
 from CommandsDict import CommandsDict
 
 def isCommand(command, args):
@@ -39,15 +41,35 @@ def matchAndCallCommand(command, commands):
 # ------------------------------------------------------- #
 # Add functions to call here                              #
 
+def helloworld():
+	print("Hello, World!")
+
+
+def helloname(name):
+	print("Hello, {name}!".format(name=name))
+
 
 commands = CommandsDict()
 # ------------------------------------------------------- #
 # Add command definitions here                            #
 
+commdef = [['hello'], ['world']]
+func = helloworld
+args = False
+commfunc = [func, args]
+commands[commdef] = commfunc
+
+
+commdef = [['hello'], ['james', 'two']]
+func = helloname
+args = ['James']
+commfunc = [func, args]
+commands[commdef] = commfunc
 
 
 if __name__ == '__main__':
 	# This is an example set of functions and commands
+	commands = CommandsDict()
 
 	def helloworld():
 		print("Hello, World!")
