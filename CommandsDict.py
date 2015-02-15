@@ -27,3 +27,9 @@ class CommandsDict(dict):
 			newkeys.append(key)
 
 		return newkeys
+
+	def items(self):
+		items = list()
+		for key in self.keys():
+			items.append((key, self.__getitem__(key)))
+		return items
