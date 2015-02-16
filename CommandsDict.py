@@ -8,25 +8,30 @@ class CommandsDict(dict):
 
 	def __getitem__(self, key):
 		if isinstance(key, list): key = repr(key)
-		val = dict.__getitem__(self, key)
-		try: val = le(val)
-		except ValueError: pass
-		return val
+		return dict.__getitem__(self, key)
+
 
 	def __setitem__(self, key, val):
 		if isinstance(key, list):
 			key = repr(key)
 		dict.__setitem__(self, key, val)
 
-	def keys(self):
-		keys = dict.keys(self)
-		newkeys = list()
-		for key in keys:
-			try: key = le(key)
-			except ValueError: pass
-			newkeys.append(key)
 
-		return newkeys
+	def __iter__(self):
+		for key in dict.__iter__(self):
+			yield le(key)
+
+
+	def __contains__(self, key):
+		return key in self.keys()
+
+	def has_key(self, key):
+		return self.__contains__(key)
+
+
+	def keys(self):
+		return [le(key) for key in dict(self)]
+
 
 	def items(self):
 		items = list()
