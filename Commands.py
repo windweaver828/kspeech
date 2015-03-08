@@ -2,6 +2,7 @@
 
 # Examples to help under the if name == main clause down below
 
+import sys
 from CommandsDict import CommandsDict
 
 # ------------------------------------------------------- #
@@ -252,13 +253,7 @@ commands[commdef] = commfunc
 
 commdef = [['vnc'], ['jayme']]
 func = vnc
-args = ['jayem']
-commfunc = [func, args]
-commands[commdef] = commfunc
-
-commdef = [['power', 'shut', 'send'], ["off", "down", ["to", "hell"]], ["computer"]]
-func = reboot
-args = False
+args = ['jayme']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
@@ -358,7 +353,7 @@ args = ['/home/james/Documents']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
-commdef = [['my', 'oopen', 'show'], ['download', 'downloads']]
+commdef = [['my', 'open', 'show'], ['download', 'downloads']]
 func = nemo
 args = ['/home/james/Downloads']
 commfunc = [func, args]
@@ -574,25 +569,18 @@ args = ['keydown ctrl key f keyup ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
-
-commdef = [['hello'], ['world']]
-func = helloworld
-args = False
+commdef = [['show', 'commands'], ['commands', 'list']]
+func = runProg
+args = ['python /home/james/Projects/kspeech/commandslist.py']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
-
-commdef = [['hello'], ['james', 'two']]
-func = helloname
-args = ['James']
-commfunc = [func, args]
-commands[commdef] = commfunc
-
-
-
-
-
-
+#Tests dont support 3+d lists
+##commdef = [['power', 'shut', 'send'], ["off", "down", ["to", "hell"]], ["computer"]]
+##func = reboot
+##args = False
+##commfunc = [func, args]
+##commands[commdef] = commfunc
 
 
 if __name__ == '__main__':
