@@ -20,6 +20,7 @@ class RichTextFrame(wx.Frame):
         wx.CallAfter(self.rtc.SetFocus)
         self.rtc.Freeze()
         for line in lines:
+            line.strip()
             if line == "None" or line in ignore:
                 pass
             else:

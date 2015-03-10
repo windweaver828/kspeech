@@ -17,7 +17,7 @@ def addwords(addto, wordslist, count):
     for _ in xrange(count):
         addto.append(random.choice(wordslist))
     random.shuffle(addto)
-    return addto
+    return addto 
 
 
 if __name__ == "__main__":
@@ -27,13 +27,13 @@ if __name__ == "__main__":
     passed = list()
     fails = list()
     for command in commands:
-            for test in gentests(command):
-                # test = addwords(test, wordslist, random.randrange(3, 10))
-                test = " ".join(test)
-                if isCommand(test, command):
-                    passed.append(test)
-                else:
-                    fails.append(test)
+        for test in gentests(command):
+        # test = addwords(test, wordslist, random.randrange(3, 10))
+            test = " ".join(test)
+            if isCommand(test, command):
+                passed.append(test)
+            else:
+                fails.append(test)
 
     for pas in passed:
         print("{pas}".format(pas=pas))
