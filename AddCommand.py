@@ -17,13 +17,17 @@ def test():
     for definition, args in getDefs():
         print("{}({})".format(definition, args))
 
-##class InputFrame(wx.Frame):
-##    def __init__(self, defs):
-##        wx.Frame.__init__(self, defs):
-##            self.defs = getDefs()
-##                       
+class InputFrame(wx.Frame):
+    def __init__(self, parent, id, title, defs):
+        wx.Frame.__init__(self, parent, id, title, wx.DefaultPosition, wx.Size(500, 500))
+        panel = wx.Panel(self, -1)
+        self.defs = getDefs()
+
+                       
 
 if __name__ == "__main__":
     test()
-    ##    app = wx.App()
-    ##    app.MainLoop()
+    app = wx.App()
+    frame = InputFrame(None, -1, 'Add Voice Commmand', getDefs())
+    frame.Show()
+    app.MainLoop()
