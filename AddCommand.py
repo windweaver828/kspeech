@@ -51,19 +51,29 @@ class InputFrame(wx.Frame):
         function_call = self.listBox.GetStringSelection()
         self.argText.SetLabel(self.defs[function_call])
 
-    def Config(self, command, function, args): # I reeeeaaaalllllly don't like this function.. lol it needs some love..
+    def Config(self, command, function, args): # I really don't like this function.. lol
         newlines = []
         with open(command_file, 'r') as orig:
-            lines = orig.readlines()
-        for line in lines:              #This is equivalent to -- newlines = lines dont loop unneccessarily
-            newlines.append(line)
+            newlines = orig.readlines()
         wline = 'commdef = [{}]\n'.format(command)
+        ## thought about trying to input as straight text
+        ## this or this or this and this or this and this
+        ## then split on the or/and but that will be harder
+        ## than trying to remember the input format hehe
         wline += 'func = {}\n'.format(function)
         wline += "args = ['{}\n']".format(args)
         wline += 'commfunc = [func, args]\ncommands[commdef] = commfunc\n'
         #if len(command) <2:
+        #This is a check in case you exit the addcommand without inputting anything it just overwrites commands.py
+        #with the original lines...
         #    pass # why cehck for if we gonna pass anyway?
         else: newlines.insert(-74, wline) # -74!!! Wha tha Fuckk you tryin ta accomplish??
+        ## newlines[-74] is the number of lines from the bottom to the top of the if name == __main__
+        ## less chance that we are going to add something to the bottom of the file...
+        ## this means that the new command will always be the last command in the list...
+        ## without indexing the list of lines it is VERY difficult to insert into a file in a place
+        ## where you are sure it will be where you intend it to go unless you count the lines and have
+        ## a marker where you always want to insert the new lines either before or after if that makes sense.
         for line in newlines:
             f.write(line)
         f.close()
