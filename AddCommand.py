@@ -51,22 +51,19 @@ class InputFrame(wx.Frame):
         function_call = self.listBox.GetStringSelection()
         self.argText.SetLabel(self.defs[function_call])
 
-    def Config(self, command, function, args):
+    def Config(self, command, function, args): # I reeeeaaaalllllly don't like this function.. lol it needs some love..
         newlines = []
         with open(command_file, 'r') as orig:
             lines = orig.readlines()
-        for line in lines:
+        for line in lines:              #This is equivalent to -- newlines = lines dont loop unneccessarily
             newlines.append(line)
-        f = open("/home/james/Desktop/testfile.py", "w")            
-        line1 = 'commdef = ['+command+']'
-        line2 = 'func = '+function
-        line3 = "args = ['{}']".format(args)
-        line4 = 'commfunc = [func, args]'
-        line5 = 'commands[commdef] = commfunc'
-        myline = "\n"+line1+"\n"+line2+"\n"+line3+"\n"+line4+"\n"+line5+"\n"
-        if len(command) <2:
-            pass
-        else: newlines.insert(-74, myline)
+        wline = 'commdef = [{}]\n'.format(command)
+        wline += 'func = {}\n'.format(function)
+        wline += "args = ['{}\n']".format(args)
+        wline += 'commfunc = [func, args]\ncommands[commdef] = commfunc\n'
+        #if len(command) <2:
+        #    pass # why cehck for if we gonna pass anyway?
+        else: newlines.insert(-74, wline) # -74!!! Wha tha Fuckk you tryin ta accomplish??
         for line in newlines:
             f.write(line)
         f.close()
