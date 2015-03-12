@@ -13,9 +13,6 @@ def getDefs():
                     a = line.split("def ")[-1]
                     yield(a.split("(")[0], a.split('(')[1].split(")")[0])
 
-def test():
-    for definition, args in getDefs():
-        print("{}({})".format(definition, args))
 
 class InputFrame(wx.Frame):
     def __init__(self, parent, id, title):
@@ -51,38 +48,25 @@ class InputFrame(wx.Frame):
         function_call = self.listBox.GetStringSelection()
         self.argText.SetLabel(self.defs[function_call])
 
-    def Config(self, command, function, args): # I really don't like this function.. lol
-        newlines = []
-        with open(command_file, 'r') as orig:
-            newlines = orig.readlines()
-        wline = 'commdef = [{}]\n'.format(command)
-        ## thought about trying to input as straight text
-        ## this or this or this and this or this and this
-        ## then split on the or/and but that will be harder
-        ## than trying to remember the input format hehe
-        wline += 'func = {}\n'.format(function)
-        wline += "args = ['{}\n']".format(args)
-        wline += 'commfunc = [func, args]\ncommands[commdef] = commfunc\n'
-        #if len(command) <2:
-        #This is a check in case you exit the addcommand without inputting anything it just overwrites commands.py
-        #with the original lines...
-        #    pass # why cehck for if we gonna pass anyway?
-        else: newlines.insert(-74, wline) # -74!!! Wha tha Fuckk you tryin ta accomplish??
-        ## newlines[-74] is the number of lines from the bottom to the top of the if name == __main__
-        ## less chance that we are going to add something to the bottom of the file...
-        ## this means that the new command will always be the last command in the list...
-        ## without indexing the list of lines it is VERY difficult to insert into a file in a place
-        ## where you are sure it will be where you intend it to go unless you count the lines and have
-        ## a marker where you always want to insert the new lines either before or after if that makes sense.
-        for line in newlines:
-            f.write(line)
-        f.close()
+    def Config(self, command, function, args):
+        wlines = '\ncommdef = [{}]\n'.format(command)
+        wlines += 'func = {}\n'.format(function)
+        wlines += "args = ['{}']\n".format(args)
+        wlines += 'commfunc = [func, args]\ncommands[commdef] = commfunc'
+        #with open(command_file, 'w'), as wfile: #Uncomment these
+        #    wfile.write(wlines)                 #lines for non test code
+        with open(command_file, 'r') as cfile:   
+            lines = cfile.readlines()            #writes to
+        lines.append(wlines)                     #outfile.py
+        with open('outfile.py', 'w') as wfile:   #instead of
+            for line in lines:                   #Commands.py
+                wfile.write(line)                #Comment these and uncomment above in production
+        
         
     def OnClose(self, event):
         self.Destroy()
         
 if __name__ == "__main__":
-    test()
     app = wx.App()
     frame = InputFrame(None, -1, 'Add Voice Commmand')
     frame.Show()

@@ -157,7 +157,7 @@ commands[commdef] = commfunc
 
 commdef = [['kill'],['voice']]
 func = runProg
-args = ['kill all kspeech']
+args = ['killall, kspeech']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
@@ -259,91 +259,91 @@ commands[commdef] = commfunc
 
 commdef = [['new'], ['folder', 'directory']]
 func = xdo
-args = ['keydown ctrl keydown shift key n keyup ctrl keyup shift']
+args = ['keydown', 'ctrl', 'keydown', 'shift', 'key', 'n', 'keyup', 'ctrl', 'keyup', 'shift']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['save']]
 func = xdo
-args = ['keydown ctrl key s keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 's', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['what'], ['time']]
 func =  runProg
-args = ['date +%I:%M%p | festival --tts']
+args = ['date', '+%I:%M%p', '|', 'festival', '--tts']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['cut'], ['selected', 'clip', 'text']]
 func = xdo 
-args = ['keydown ctrl key x keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'x', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['send', 'move'], ['right'], ['monitor', 'screen']]
 func = xdo
-args = ['keydown ctrl keydown shift key Right keyup ctrl keyup shift']
+args = ['keydown', 'ctrl', 'keydown', 'shift', 'key', 'Right', 'keyup', 'ctrl', 'keyup', 'shift']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['send', 'move'], ['left'], ['monitor', 'screen']]
 func = xdo
-args = ['keydown ctrl keydown shift key Left keyup ctrl keyup shift']
+args = ['keydown', 'ctrl', 'keydown', 'shift', 'key', 'Left', 'keyup', 'ctrl', 'keyup', 'shift']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['left'], ['side']]
 func = xdo
-args = ['keydown Super key Left Keyup Super']
+args = ['keydown', 'Super', 'key', 'Left', 'Keyup', 'Super']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['right'], ['side']]
 func = xdo
-args = ['keydown SUper key Right keyup Super']
+args = ['keydown', 'Super', 'key', 'Right', 'keyup', 'Super']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['go'], ['right']]
 func = xdo
-args = ['key Right']
+args = ['key', 'Right']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['go'], ['left']]
 func = xdo
-args = ['key Left']
+args = ['key', 'Left']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['window'], ['bottom']]
 func = xdo
-args = ['keydown Super key Down keyup Super']
+args = ['keydown', 'Super', 'key', 'Down', 'keyup', 'Super']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['close'], ['window']]
 func = xdo
-args = ['keydown alt key F4 keyup alt']
+args = ['keydown', 'alt', 'key', 'F4', 'keyup', 'alt']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['full'], ['screen']]
 func = xdo
-args = ['key F11']
+args = ['key', 'F11']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['open', 'show'], ['recycle', 'trash']]
 func = xdo
-args = ['keydown ctrl keydown shift key t keyup ctrl keyup shift']
+args = ['keydown', 'ctrl', 'keydown', 'shift', 'key', 't', 'keyup', 'ctrl', 'keyup', 'shift']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['empty'], ['trash']]
 func = runProg
-args = ['sudp rm -rf ~/.local/share/Trash/files/* ~/.local/share/Trash/info/*']
+args = ['sudo', 'rm', '-rf', '~/.local/share/Trash/files/*', '~/.local/share/Trash/info/*']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
@@ -385,73 +385,73 @@ commands[commdef] = commfunc
 
 commdef = [['scroll'], ['up', 'left']]
 func = xdo
-args = ['click --repeat 5 4']
+args = ['click', '--repeat', '5', '4']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['scroll'], ['down', 'right']]
 func = xdo
-args = ['click --repeat 5 5']
+args = ['click', '--repeat', '5', '5']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['switch', 'swap', 'change'], ['window', 'application']]
 func = xdo 
-args = ['keydown alt key Tab keyup alt']
+args = ['keydown', 'alt', 'key', 'Tab', 'keyup', 'alt']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['copy'], ['selected', 'clip', 'text']]
 func = xdo
-args = ['keydown ctrl key c keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'c', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['insert', 'paste']]
 func = xdo
-args = ['keydown ctrl key v keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'v', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['undo']]
 func = xdo
-args = ['keydown ctrl key z keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'z', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['rename'], ['change', 'name']]
 func = xdo
-args = ['key F2']
+args = ['key', 'F2']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['select'], ['all']]
 func = xdo
-args = ['keydown ctrl key a keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'a', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['help', 'menu']]
 func = xdo
-args = ['key F1']
+args = ['key', 'F1']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['minimize', 'show'], ['all', 'desktop']]
 func = xdo
-args = ['keydown Super key d keyup Super']
+args = ['keydown', 'Super', 'key', 'd', 'keyup', 'Super']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['maximize']]
 func = xdo
-args = ['keydown Super key Up keyup Super keydown Super key Up keyup Super']
+args = ['keydown', 'Super', 'key', 'Up', 'keyup', 'Super', 'keydown', 'Super', 'key', 'Up', 'keyup', 'Super']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['show', 'all']]
 func = xdo
-args = ['keydown ctrl keydown alt key Up keyup ctrl keyup alt']
+args = ['keydown', 'ctrl', 'keydown', 'alt', 'key', 'Up', 'keyup', 'ctrl', 'keyup', 'alt']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
@@ -481,97 +481,97 @@ commands[commdef] = commfunc
 
 commdef = [['close'], ['tab']]
 func = xdo
-args = ['keydown ctrl key F4 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'F4', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['one']]
 func = xdo
-args = ['keydown ctrl key 1 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '1', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['two']]
 func = xdo
-args = ['keydown ctrl key 2 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '2', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['three']]
 func = xdo
-args = ['keydown ctrl key 3 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '3', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['four']]
 func = xdo
-args = ['keydown ctrl key 4 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '4', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['five']]
 func = xdo
-args = ['keydown ctrl key 5 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '5', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['six']]
 func = xdo
-args = ['keydown ctrl key 6 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '6', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['seven']]
 func = xdo
-args = ['keydown ctrl key 7 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '7', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['eight']]
 func = xdo
-args = ['keydown ctrl key 8 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '8', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['tab'], ['nine']]
 func = xdo
-args = ['keydown ctrl key 9 keyup ctrl']
+args = ['keydown', 'ctrl', 'key', '9', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['open']]
 func = xdo
-args = ['keydown ctrl key o keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'o', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['print']]
 func = xdo
-args = ['keydown ctrl key p keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'p', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['delete']]
 func = xdo
-args = ['key Delete']
+args = ['key', 'Delete']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['select', 'enter']]
 func = xdo
-args = ['key Return']
+args = ['key', 'Return']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['search', 'find']]
 func = xdo 
-args = ['keydown ctrl key f keyup ctrl']
+args = ['keydown', 'ctrl', 'key', 'f', 'keyup', 'ctrl']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
 commdef = [['show', 'commands'], ['commands', 'list']]
 func = runProg
-args = ['python /home/james/Projects/kspeech/commandslist.py']
+args = ['python', '/home/james/Projects/kspeech/commandslist.py']
 commfunc = [func, args]
 commands[commdef] = commfunc
 
@@ -581,69 +581,3 @@ commands[commdef] = commfunc
 ##args = False
 ##commfunc = [func, args]
 ##commands[commdef] = commfunc
-
-
-if __name__ == '__main__':
-	# This is an example set of functions and commands
-	commands = CommandsDict()
-
-	def helloworld():
-		print("Hello, World!")
-
-	def helloname(name):
-		print("Hello, {name}!".format(name=name))
-
-	def hellonames(name1, name2):
-		print("Hello, {name1} and {name2}".format(name1=name1, name2=name2))
-
-
-	# Example of setting command definition for
-	# a function with no arguments
-	commdef = [['hello'], ['one']]
-	func = helloworld
-	args = False
-	commfunc = [func, args] # These two lines
-	commands[commdef] = commfunc # Always the same
-
-	# Example of setting command definition for
-	# a function with one argument
-	commdef = [['hello'], ['two']]
-	func = helloname
-	args = ['Keith'] # Put args in a comma seperated list
-	commfunc = [func, args] # Again, These two lines
-	commands[commdef] = commfunc # Always the same
-
-	# Example of setting command definition for
-	# a function with multiple arguments
-	commdef = [['hello'], ['three']]
-	func = hellonames
-	args = ['Keith', 'James'] # Args always go in a one
-							  # dimensional comma seperated list
-	commfunc = [func, args]
-	commands[commdef] = commfunc
-
-
-
-
-	# And to pull it all back out and call it
-	from commandtools import matchCommand, callCommand
-
-	command = "hello one"
-	func, args = matchCommand(command, commands)
-	callCommand(func, args)
-	# Or a nice one liner that we so love
-	command = "hello two"
-	callCommand(*matchCommand(command, commands))
-
-
-	# Or
-
-	# If all we want is to call it if it exists (like usual)
-	# and ignore if its not a match we use
-
-	from commandtools import matchAndCallCommand
-	command = "This doesn't exist hahahah"
-	matchAndCallCommand(command, commands) # Doesn't do anything
-
-	command = "hello three"
-	matchAndCallCommand(command, commands) # Does something
