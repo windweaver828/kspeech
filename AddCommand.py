@@ -26,11 +26,11 @@ class InputFrame(wx.Frame):
             self.defs[definition]=args        
         self.listBox = wx.ListBox(panel, -1, (25,10), (125,100), self.funcs)
         self.Bind(wx.EVT_LISTBOX, self.changeArgs)
-        self.label = wx.StaticText(panel, -1, 'This is the Required Argument', (25, 110))
+        self.label = wx.StaticText(panel, -1, 'Function to call', (25, 110))
         self.argText = wx.StaticText(panel, -1, "None", (25, 130))
-        self.inputLabel = wx.StaticText(panel, -1, 'Enter the command to listen for format ["this", "or"]', (25, 150))
+        self.inputLabel = wx.StaticText(panel, -1, 'Listen command: ["this", "or"], ["and"]', (25, 150))
         self.input1 = wx.TextCtrl(panel, -1, pos=(25, 170), size=(300, 30))
-        self.inputLabel = wx.StaticText(panel, -1, 'Enter the required args space separated', (25, 200))
+        self.inputLabel = wx.StaticText(panel, -1, 'Space separated arguments: "arg1", "arg2"', (25, 200))
         self.input2 = wx.TextCtrl(panel, -1, pos=(25, 220), size=(300, 30))
         m_close = wx.Button(panel, wx.ID_CLOSE, "Close", pos=(150,300))
         m_close.Bind(wx.EVT_BUTTON, self.OnClose)
@@ -51,7 +51,7 @@ class InputFrame(wx.Frame):
     def Config(self, command, function, args):
         wlines = '\ncommdef = [{}]\n'.format(command)
         wlines += 'func = {}\n'.format(function)
-        wlines += "args = ['{}']\n".format(args)
+        wlines += "args = [{}]\n".format(args)
         wlines += 'commfunc = [func, args]\ncommands[commdef] = commfunc'
         #with open(command_file, 'w'), as wfile: #Uncomment these
         #    wfile.write(wlines)                 #lines for non test code
