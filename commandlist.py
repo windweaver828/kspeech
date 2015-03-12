@@ -4,7 +4,7 @@ from subprocess import Popen, PIPE
 
 ignore = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 def get_commands():
-    pipe = Popen('python /home/james/Projects/kspeech/jamestest.py', stdout=PIPE, shell=True)
+    pipe = Popen('python /home/james/Projects/kspeech/commandlisttest.py', stdout=PIPE, shell=True)
     text = pipe.communicate()
     return text
  

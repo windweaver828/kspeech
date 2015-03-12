@@ -31,8 +31,8 @@ class InputFrame(wx.Frame):
         self.Bind(wx.EVT_LISTBOX, self.changeArgs)
         self.label = wx.StaticText(panel, -1, 'This is the Required Argument', (25, 110))
         self.argText = wx.StaticText(panel, -1, "None", (25, 130))
-        self.inputLabel = wx.StaticText(panel, -1, 'Enter the command to listen for format ["this", "or"]', (25, 150))
-        self.input1 = wx.TextCtrl(panel, -1, pos=(25, 170), size=(300, 30))
+        self.inputLabel = wx.StaticText(panel, -1, 'Enter the command to listen for', (25, 150))
+        self.input1 = wx.TextCtrl(panel, -1, pos=(25, 170), size=(300, 30), value = "[['this', 'this], ['this']]")
         self.inputLabel = wx.StaticText(panel, -1, 'Enter the required args space separated', (25, 200))
         self.input2 = wx.TextCtrl(panel, -1, pos=(25, 220), size=(300, 30))
         m_close = wx.Button(panel, wx.ID_CLOSE, "Close", pos=(150,300))
@@ -44,12 +44,17 @@ class InputFrame(wx.Frame):
         commands = self.input1.GetValue()
         function_call = self.listBox.GetStringSelection()
         args = self.input2.GetValue()
-        self.Config(commands, function_call, args)
-        self.Destroy()
+        if len(commands) < 3:
+            self.Destroy()
+        else:
+            self.Config(commands, function_call, args)
+            self.Destroy()
 
     def changeArgs(self, event):
         function_call = self.listBox.GetStringSelection()
-        self.argText.SetLabel(self.defs[function_call])
+        if len(self.defs[function_call]) < 3:
+            self.argText.SetLabel('None')
+        else: self.argText.SetLabel(self.defs[function_call])
 
     def Config(self, command, function, args): # I really don't like this function.. lol
         newlines = []
@@ -63,10 +68,10 @@ class InputFrame(wx.Frame):
         wline += 'func = {}\n'.format(function)
         wline += "args = ['{}\n']".format(args)
         wline += 'commfunc = [func, args]\ncommands[commdef] = commfunc\n'
-        #if len(command) <2:
-        #This is a check in case you exit the addcommand without inputting anything it just overwrites commands.py
-        #with the original lines...
-        #    pass # why cehck for if we gonna pass anyway?
+        if len(command) <2:
+        #This is a check in case you exit the addcommand without inputting
+        ## anything it just overwrites commands.py with the original lines...
+            pass # why cehck for if we gonna pass anyway?
         else: newlines.insert(-74, wline) # -74!!! Wha tha Fuckk you tryin ta accomplish??
         ## newlines[-74] is the number of lines from the bottom to the top of the if name == __main__
         ## less chance that we are going to add something to the bottom of the file...
