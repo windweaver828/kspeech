@@ -1,12 +1,28 @@
-import wx
+import wx, itertools, random
 import wx.richtext as rt
 from subprocess import Popen, PIPE
+from Commands import commands
+from commandtools import isCommand
 
 ignore = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+
+def gentests(command):
+    return itertools.product(*command)
+
 def get_commands():
-    pipe = Popen('python /home/james/Projects/kspeech/commandlisttest.py', stdout=PIPE, shell=True)
-    text = pipe.communicate()
-    return text
+    passed = list()
+    fails = list()
+    for command in commands:
+        for test in gentests(command):
+            test = " ".join(test)
+            if isCommand(test, command):
+                passed.append(test)
+            else:
+                pass
+    return passed    
+##    pipe = Popen('python /home/james/Projects/kspeech/commandlisttest.py', stdout=PIPE, shell=True)
+##    text = pipe.communicate()
+##    return text
  
 def show_commands():
     results = get_commands()
