@@ -80,10 +80,16 @@ def dbusremote(server, var):
         client.connect(server, port=22, username='pi', password='pi')
     except: print('Can not connect to : {server}').format(server=server)
     stdin, stdout, stderr = client.exec_command(cmd)
-    a = (stdout.read().strip())
-    duration = a.split(':')[1].split("\n")[0]
-    position = a.split(':')[2].split("\n")[0]
-    timecorrect(duration, position)
+    try:
+        a = (stdout.read().strip())
+        duration = a.split(':')[1].split("\n")[0]
+        position = a.split(':')[2].split("\n")[0]
+        timecorrect(duration, position)
+        message = "Duration:  "+str(duration)[0:7]+"\n"+"Position:  "+str(position)[0:7]+"\n"+"Remaining: "+str(timeremaining)[0:7]
+        popup(message)
+    except:
+        ret = (stdout.read().strip())
+        return ret
 
 def timecorrect(dur, pos):
     duration = datetime.timedelta(microseconds = int(dur))
@@ -92,14 +98,7 @@ def timecorrect(dur, pos):
     print("Duration:  "+str(duration)[0:7])
     print("Position:  "+str(position)[0:7])
     print("Remaining: "+str(timeremaining)[0:7])
-    percent_remaining= int((float(pos)/float(dur))*100)
-    print("Completed: "+str(percent_remaining)+"%")
-    remain = str(timeremaining).split(':')
-    hours = remain[0]
-    mins = remain[1]
-    cmd = "There, are, "+str(hours)+", hour, and, "+numToWords(int(mins))+"minutes, remaining!"
-    speak_init()
-    speak(cmd)
+    return duration[0:7], position[0:7], timeremaining[0:]
    
 def execterminal(cmd):
     cmd = 'gnome-terminal -e "'+cmd+'"'
@@ -110,7 +109,10 @@ def internet(address):
 
 def nemo(path):
     os.popen("nemo "+path)
-    
+
+def popup(message):
+    subprocess.Popen('/home/james/bin/popup', shell=True)
+
 def vnc(client):
     os.popen('vncviewer '+client+"Pi &")
 
