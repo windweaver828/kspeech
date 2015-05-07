@@ -1,0 +1,469 @@
+#!/usr/bin/env python
+
+import os, sys, time, subprocess, pyperclip, datetime, paramiko
+from espeak import espeak
+
+
+## mouse 
+left_mouse = 'click 1'
+right_mouse = 'click 3'
+mouse_move = 'mousemove'
+mouse_scroll_up = 'click 4'
+mouse_scroll_down = 'click 5'
+mouse_double = 'click --repeat 2 1'
+# kill_selected = 'selectwindow windowkill' kills all instances of that window name..click nemo kills all open nemo's
+
+##Special characters
+space = 'space'
+exclamation = 'exclam'
+quote = 'quotedbl'
+pound = 'numbersign'
+dollar_sign = 'dollar'
+percent_sign = 'percent'
+ampersand = 'ampersand'
+end_quote = 'quoteright'
+open_parenthesis = 'pernleft'
+open_bracket = 'bracketleft'
+asterisk = 'asterisk'
+backslash = 'backslash'
+plus = 'plus'
+close_bracket = 'bracketright'
+comma = 'comma'
+minus = 'minus'
+underscore = 'underscore'
+period = 'period'
+open_quote = 'quoteleft'
+forward_slash = 'slash'
+colon = 'colon'
+semicolon = 'semicolon'
+less_than = 'less'
+equal_sign = 'equal'
+greater_than = 'greater'
+question_mark = 'question'
+at = 'at'
+open_brace = 'braceleft'
+tilde = 'asciitilde'
+control = 'ctrl'
+alt = 'alt'
+backspace = 'BackSpace'
+enter = 'Return'
+caps_lock = 'Caps_Lock'
+home = 'Home'
+end = 'End'
+print_screen = 'Print'
+delete = 'Delete'
+page_up = 'Prior'
+page_down = 'Next'
+tab = 'Tab'
+windows = 'Super'
+shift = 'shift'
+
+
+## special functions
+send_key = 'key'
+hold_key = 'keydown' #xdotool keydown J; xdotool keyup --delay 500 J
+release_key = 'keyup'
+
+def mainBody(cmd):
+    '''For reference this the expected argument format
+        Think of each level of the list as alternating between and and or
+        starting with and. So for instance:
+        args = [['power', 'shut', 'send'], ["off", "down", ["to", "hell"]], ["computer"]]
+        means (power or shut) and (off or down or (to and hell)) and computer in command
+        so "jarvis send the computer to hell please" is just as valid as "jarvis power off the computer"
+        '''
+
+    def isCommand(command, args):
+        index = 0
+        for arg in args:
+            if isinstance(arg, list):
+                for ar in arg:
+                    if isinstance(ar, list):
+                        for a in ar:
+                            if isinstance(a, list):
+                                index-=1
+                                isCommand(command, a)
+                            elif not a in command:
+                                break
+                            else:
+                                index+=1
+                    elif ar in command:
+                        index+=1
+                        break
+        if index >= len(args):
+            return True
+
+    def xdo(key):
+        if 'keydown' in key:
+            cmd = 'xdotool '+key
+        elif 'type' in key:
+            cmad = 'xdotool '+key
+        else:
+            cmd = "xdotool "+ send_key +" "+key
+        os.popen(cmd)
+
+    def numToWords(num,join=True):
+        units = ['','one','two','three','four','five','six','seven','eight','nine']
+        teens = ['','eleven','twelve','thirteen','fourteen','fifteen','sixteen', \
+                 'seventeen','eighteen','nineteen']
+        tens = ['','ten','twenty','thirty','forty','fifty','sixty','seventy', \
+                'eighty','ninety']
+        thousands = ['','thousand','million','billion','trillion','quadrillion', \
+                     'quintillion','sextillion','septillion','octillion', \
+                     'nonillion','decillion','undecillion','duodecillion', \
+                     'tredecillion','quattuordecillion','sexdecillion', \
+                     'septendecillion','octodecillion','novemdecillion', \
+                     'vigintillion']
+        words = []
+        if num==0: words.append('zero')
+        else:
+            numStr = '%d'%num
+            numStrLen = len(numStr)
+            groups = (numStrLen+2)/3
+            numStr = numStr.zfill(groups*3)
+            for i in range(0,groups*3,3):
+                h,t,u = int(numStr[i]),int(numStr[i+1]),int(numStr[i+2])
+                g = groups-(i/3+1)
+                if h>=1:
+                    words.append(units[h])
+                    words.append('hundred')
+                if t>1:
+                    words.append(tens[t])
+                    if u>=1: words.append(units[u])
+                elif t==1:
+                    if u>=1: words.append(teens[u])
+                    else: words.append(tens[t])
+                else:
+                    if u>=1: words.append(units[u])
+                if (g>=1) and ((h+t+u)>0): words.append(thousands[g]+',')
+        if join: return ' '.join(words)
+        return words
+
+    def dbusremote(server, var):
+        cmd = "/home/pi/bin/dbuscontrol "
+        if var == 'status':
+            cmd += "status"
+        elif var == 'stop':
+            cmd += "stop"
+        elif var == 'pause':
+            cmd += "pause"
+        elif var == 'seek':
+            cmd += "seek"
+        elif var == 'vol down':
+            cmd += "volumedown"
+        elif var == 'vol up':
+            cmd += "volumeup"
+        client = paramiko.client.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        try:
+            client.connect(server, port=22, username='pi', password='pi')
+        except: print('Can not connect to : {server}').format(server=server)
+        stdin, stdout, stderr = client.exec_command(cmd)
+        a = (stdout.read().strip())
+        duration = a.split(':')[1].split("\n")[0]
+        position = a.split(':')[2].split("\n")[0]
+        timecorrect(duration, position)
+
+    def timecorrect(dur, pos):
+        duration = datetime.timedelta(microseconds = int(dur))
+        position = datetime.timedelta(microseconds = int(pos))
+        message = "Duration:  "+str(duration)[0:7]+"Position:  "+str(position)[0:7]
+        subprocess.Popen("/home/james/bin/popup "+message, shell=True)
+        timeremaining = duration - position
+        percent_remaining= int((float(pos)/float(dur))*100)
+        remain = str(timeremaining).split(':')
+        hours = remain[0]
+        mins = remain[1]
+        cmd = "There, is, "+str(hours)+", hour, and, "+numToWords(int(mins))+"minutes, remaining!"
+        speak(cmd)
+    
+    def execterminal(cmd):
+        cmd = 'gnome-terminal -e "'+cmd+'"'
+        os.popen(cmd)        
+
+    def internet(address):
+        os.popen("google-chrome "+address)                 
+
+    def nemo(path):
+        os.popen("nemo "+path)
+    
+    def vnc(client):
+        os.popen('vncviewer '+client+"Pi &")
+
+    def ssh(client):
+        cmd = "/home/james/bin/ssh"+client
+        execterminal(cmd)
+
+    def reboot():
+        runProg('python /home/james/bin/rboot')
+
+    def binconfig():
+        runProg('python /home/james/bin/binconfig')
+
+    def mousegrid():
+        child = subprocess.Popen('python /home/james/bin/kmousegrid.py', shell=True)
+                
+    def speak_init():
+        os.popen('echo "aah" | festival --tts').readlines()
+
+    def speak(sentence):
+        os.popen('echo , "'+sentence+'" | festival --tts')
+
+    def numpress(num):
+        xdo(num)
+
+    def mouse(cmd):
+        if cmd=='right click':
+            xdo(right_mouse)
+        elif cmd=='double click':
+            xdo(mouse_double)
+
+    def runProg(cmd):
+        subprocess.Popen(cmd, shell=True)
+
+    if isCommand(command, [['jayme'], ['status']]):
+        dbusremote('jaymePi', 'status')    
+
+    elif isCommand(command, [['ryann'], ['status']]):
+        dbusremote('ryannPi', 'status')
+
+    elif isCommand(command, [['kill'], ['voice', 'speech']]):
+        speak("Now killing speech recognition")
+        runProg("killall kspeech")
+
+    elif isCommand(command, [['left'], ['click']]):
+        xdo('l')
+
+    elif isCommand(command, [['right'], ['click']]):
+        xdo('l')
+
+    elif isCommand(command, [['double'], ['click']]):
+        xdo('d')
+
+    elif isCommand(command, [['speak']]):
+        speak_init()
+        speak(command.replace("speak", ""))
+
+    elif isCommand(command, [['mouse']]):
+        mousegrid()
+
+    elif isCommand(command, [['d bus']]):
+        runProg('dbusgui')
+
+    elif isCommand(command, [['open', 'show'],['terminal']]):
+        xdo('keydown ctrl keydown alt key t keyup ctrl keyup alt')
+
+    elif isCommand(command, [['downloads'],['terminal']]):
+        runProg('xdotool keydown ctrl keydown alt key t keyup ctrl keyup alt && sleep 0.5 && xdotool type "cd Downloads" && sleep 0.5 && xdotool key Return && xdotool type cls && xdotool key Return')
+
+    elif isCommand(command, [['exit'],['terminal']]):
+        xdo('type exit && xdotool key Return')
+        
+    elif isCommand(command, [['one']]):
+        numpress('1')
+
+    elif isCommand(command, [['two']]):
+        numpress('2')
+
+    elif isCommand(command, [['three']]):
+        numpress('3')
+
+    elif isCommand(command, [['four']]):
+        numpress('4')
+
+    elif isCommand(command, [['five']]):
+        numpress('5')
+
+    elif isCommand(command, [['six']]):
+        numpress('6')
+
+    elif isCommand(command, [['seven']]):
+        numpress('7')
+
+    elif isCommand(command, [['eight']]):
+        numpress('8')
+
+    elif isCommand(command, [['nine']]):
+        numpress('9')
+
+    elif isCommand(command, [["vnc"], ["ryann"]]):
+        vnc('ryann')
+        
+    elif isCommand(command, [["vnc"],["jayme"]]):
+        vnc('jayme')
+
+    elif isCommand(command, [['power', 'shut', 'send'], ["off", "down", ["to", "hell"]], ["computer"]]):
+        speak("Good, morning, sir, I, am, pleased, to, be, here, to, help, you. What, can, I, do, for, you?")
+
+    elif isCommand(command, [["new"],["folder", "directory"]]):
+        xdo('keydown ctrl keydown shift key n keyup ctrl keyup shift') 
+
+    elif isCommand(command, [["save"]]):
+        xdo("ctrl + s")
+
+    elif isCommand(command, [['what'], ['time']]):
+        runProg('date +%I:%M%p | festival --tts')
+
+    elif isCommand(command, [["cut"], ["selected", "clip", "text"]]):
+        xdo('keydown ctrl key x keyup ctrl')
+
+    elif isCommand(command, [["send", "move"], ["left"], ["monitor", "screen"]]):
+        xdo('keydown ctrl keydown shift key Left keyup ctrl keyup shift')
+
+    elif isCommand(command, [["send", "move"], ["right"], ["monitor", "screen"]]):
+        xdo('keydown ctrl keydown shift key Right keyup ctrl keyup shift')
+
+    elif isCommand(command, [["left"], ["side"]]):
+        xdo('keydown Super key Left keyup Super')
+
+    elif isCommand(command, [["right"], ["side"]]):
+        xdo('keydown Super key Right keyup Super')
+
+    elif isCommand(command, [["window"], ["bottom"]]):
+        xdo('keydown Super key Down keyup Super')
+
+    elif isCommand(command, [["go"], ["right"]]):
+        xdo('key Right')
+
+    elif isCommand(command, [["go"], ["left"]]):
+        xdo('key Left')
+
+    elif isCommand(command, [["close"], ["window"]]):
+        xdo('keydown alt key F4 keyup alt')
+
+    elif isCommand(command, [["full"], ["screen"]]):
+        xdo('key F11')
+
+    elif isCommand(command, [['open', 'show', 'display'],['recycle', 'trash']]):
+        xdo('keydown ctrl keydown shift key t keyup ctrl keyup shift')
+
+    elif isCommand(command, [['empty'], ['trash']]):
+        runProg('trash-empty')
+
+    elif isCommand(command, [["movie"], ["list"]]):
+        pass
+
+    elif isCommand(command, [["my", "show", "open"], ["document","documents"]]):
+        nemo('/home/james/Documents')
+
+    elif isCommand(command, [["my", "show", "open"], ["download"]]):
+        nemo('/home/james/Downloads')
+
+    elif isCommand(command, [["movie"], ["folder"]]):
+        nemo('/media/External-4.0/Media/Movies')
+
+    elif isCommand(command, [["kid","kids"], ["folder"]]):
+        nemo('/media/External-4.0/Media/Lyndas')
+
+    elif isCommand(command, [["tv"], ["folder"]]):
+        nemo('/media/External-4.0/Media/TV')
+
+    elif isCommand(command, [["scroll"], ["up", "left"]]):
+        xdo(mouse_scroll_up)
+
+    elif isCommand(command, [["scroll"], ["down", "right"]]):
+        xdo(mouse_scroll_down)
+
+    elif isCommand(command, [["switch", "swap", "change"], ["window", "application"]]):
+        xdo('keydown alt key Tab keyup alt')
+    
+    elif isCommand(command, [["copy"], ["selected", "clip", "text"]]):
+        xdo('keydown ctrl key c keyup ctrl')
+
+    elif isCommand(command, [["insert", "paste"]]):
+        xdo('keydown ctrl key v keyup ctrl')
+
+    elif isCommand(command, [["undid", "undo"]]):
+        xdo('keydown ctrl key z key up ctrl')
+
+    elif isCommand(command, [['rename', ["change", "name"]]]):
+        xdo('key F2')
+
+    elif isCommand(command, [["select"], ["all"]]):
+        xdo('keydown ctrl key a keyup ctrl')
+
+    elif isCommand(command, [["properties"]]):
+        pass
+
+    elif isCommand(command, [["help"], ["menu"]]):
+        xdo('key F1')
+
+    elif isCommand(command, [["minimize", "show"], ["all", "desktop"]]):
+        xdo('keydown super key d keyup super')
+
+    elif isCommand(command, [["maximize"]]):
+        xdo('keydown super key Up keyup super keydown super key Up keyup super')
+
+    elif isCommand(command, [["minimize"]]):
+        xdo("keydown ctrl keydown shift key Down keyup ctrl keyup shift")
+
+    elif isCommand(command, [["show", "all"]]):
+        xdo("keydown ctrl keydown alt key Down keyup ctrl keyup alt")
+
+    elif isCommand(command, [["workspace"]]):
+        xdo("keydown ctrl keydown alt key Up keyup ctrl keyup alt")
+
+    elif isCommand(command, [["workspace", "one"]]):
+        xdo("keydown ctrl keydown alt key Left keyup ctrl keyup alt")
+
+    elif isCommand(command, [["workspaces", "two"]]):
+        xdo("keydown ctrl keydown alt key Right keyup ctrl keyup alt")
+
+    elif isCommand(command, [["netflix"]]):
+        internet('www.netflix.com')
+
+    elif isCommand(command, [["facebook"]]):
+        internet('www.facebook.com')
+
+    elif isCommand(command, [["school", "college"]]):
+        internet('www.mgccc.edu')
+
+    elif isCommand(command, [["ebay"]]):
+         internet('www.ebay.com')
+
+    elif isCommand(command, [["ice films", "ice film"]]):
+         internet('www.icefilms.info')
+
+    elif isCommand(command, [['close'], ['tab']]):
+        xdo("keydown ctrl key F4 keyup ctrl")
+
+    elif isCommand(command, [['tab'], ['one']]):
+        xdo("keydown ctrl key 1 keyup ctrl")
+
+    elif isCommand(command, [['tab'], ['two']]):
+        xdo("keydown ctrl key 2 keyup ctrl")
+
+    elif isCommand(command, [['tab'], ['three']]):
+        xdo("keydown ctrl key 3 keyup ctrl")
+
+    elif isCommand(command, [['tab'], ['four']]):
+        xdo("keydown ctrl key 4 keyup ctrl")
+
+    elif isCommand(command, [['tab'], ['five']]):
+        xdo("keydown ctrl key 5 keyup ctrl")
+        
+    elif isCommand(command, [["open"]]):
+        xdo('keydown ctrl key o keyup ctrl')
+
+    elif isCommand(command, [["cancel", "abort"]]):
+        xdo('Escape')
+
+    elif isCommand(command, [['delete']]):
+        xdo('Delete')
+
+    elif isCommand(command, [['select'], ['enter']]):
+        xdo('Return')
+
+    elif isCommand(command, [["search", "find"]]):
+        xdo('keydown ctrl key f keyup ctrl')
+
+    elif isCommand(command, [['commands', 'show'], ['list', 'commands']]):
+        runProg('python /home/james/Projects/kspeech/commandlist.py')
+    
+if __name__ =="__main__":
+    command = ""
+    for arg in sys.argv[1:]:
+        if arg.lower() == 'sara': continue
+        command += arg+ " "
+    command = command.strip().lower()
+    mainBody(command)
